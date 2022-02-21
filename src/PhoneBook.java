@@ -5,6 +5,9 @@ import java.util.Map;
 
 public class PhoneBook {
 
+    private String phoneBookName;
+    Map<String,List<Contact>> groupBase = new HashMap<String,List<Contact>>();
+
     public PhoneBook (String phoneBookName){
         this.phoneBookName = phoneBookName;
     }
@@ -13,38 +16,73 @@ public class PhoneBook {
         return phoneBookName;
     }
 
-    private String phoneBookName;
-    Map<String,List<Contact>> groupBase = new HashMap<String,List<Contact>>();
-
+    // Добавление контакта в группу по умолчанию
     public void addContact (Contact contact){
-        List<Contact> defaultContactList = new ArrayList<Contact>();
-        defaultContactList.add(contact);
+        //List<Contact> defaultContactList = new ArrayList<Contact>();
+        //defaultContactList.add(contact);
+
         if (groupBase.containsKey("defaultGroup")){
             groupBase.get("defaultGroup").add(contact);
         }
         else{
-            groupBase.put("defaultGroup", defaultContactList );
-            groupBase.get("defaultGroup").add(contact);
+            groupBase.put("defaultGroup", new ArrayList<Contact>() ).add(contact);
+            //groupBase.get("defaultGroup").add(contact);
         }
     }
 
+    // Добавление контакта в указанную группу
     public void addContact (Contact contact, String groupName){
-        List<Contact> contactList = new ArrayList<Contact>();
+        //List<Contact> contactList = new ArrayList<Contact>();
         if (groupBase.containsKey(groupName)){
             groupBase.get(groupName).add(contact);
         }
         else{
-            groupBase.put(groupName, contactList);
-            groupBase.get(groupName).add(contact);
+            groupBase.get(groupBase.put(groupName, new ArrayList<Contact>())).add(contact);
+            //groupBase.get(groupName).add(contact);
         }
     }
 
+    // Добавление группы с указанным именем и группой контактов
     public void addGroup (String groupName, ArrayList<Contact> contactList){
-        groupBase.put(groupName, contactList);
+        if (groupBase.containsKey(groupName)){
+            groupBase.get(groupName).addAll(contactList);
+        }
+        else{
+            groupBase.get(groupBase.put(groupName, new ArrayList<Contact>())).addAll(contactList);
+            //groupBase.get(groupName).add(contact);
+        }
+        //addAll()
     }
 
+    // Добавление группы с указанным именем
     public void addGroup (String groupName){
-        List<Contact> contactList = new ArrayList<Contact>();
-        groupBase.put(groupName, contactList);
+        //List<Contact> contactList = new ArrayList<Contact>();
+        if (groupBase.containsKey(groupName)){
+            System.out.println("Группа с именем - " + groupName + " уже существует.");
+        }
+        else {
+            groupBase.put(groupName, new ArrayList<Contact>());
+            System.out.println("Группа с именем - " + groupName + " создана.");
+        };
+    }
+
+    // Поиск контактов по группе (вывод списка контактов по ключу - названию группы)
+    public void showGroupContacts (String groupName){
+        List<Contact> list = this.groupBase.get(groupName);
+        for(Contact person : list){
+            System.out.println(person.toString());
+        }
+    }
+
+    // Поиск контакта по номеру
+    public Contact findContact (int phoneNumber) {
+        for (Map.Entry<String, List<Contact>> item : groupBase.entrySet()) {
+            for (Contact contact : item.getValue()) {
+                if (contact.getPhoneNumber() == phoneNumber) {
+                    return contact;
+                }
+            }
+        }
+        return null;
     }
 }
