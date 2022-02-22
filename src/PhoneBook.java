@@ -18,15 +18,13 @@ public class PhoneBook {
 
     // Добавление контакта в группу по умолчанию
     public void addContact (Contact contact){
-        //List<Contact> defaultContactList = new ArrayList<Contact>();
-        //defaultContactList.add(contact);
 
         if (groupBase.containsKey("defaultGroup")){
             groupBase.get("defaultGroup").add(contact);
         }
         else{
-            groupBase.put("defaultGroup", new ArrayList<Contact>() ).add(contact);
-            //groupBase.get("defaultGroup").add(contact);
+            groupBase.put("defaultGroup", new ArrayList<Contact>() );
+            groupBase.get("defaultGroup").add(contact);
         }
     }
 
@@ -37,8 +35,8 @@ public class PhoneBook {
             groupBase.get(groupName).add(contact);
         }
         else{
-            groupBase.get(groupBase.put(groupName, new ArrayList<Contact>())).add(contact);
-            //groupBase.get(groupName).add(contact);
+            groupBase.get(groupBase.put(groupName, new ArrayList<Contact>()));
+            groupBase.get(groupName).add(contact);
         }
     }
 
@@ -51,7 +49,6 @@ public class PhoneBook {
             groupBase.get(groupBase.put(groupName, new ArrayList<Contact>())).addAll(contactList);
             //groupBase.get(groupName).add(contact);
         }
-        //addAll()
     }
 
     // Добавление группы с указанным именем
@@ -75,10 +72,10 @@ public class PhoneBook {
     }
 
     // Поиск контакта по номеру
-    public Contact findContact (int phoneNumber) {
+    public Contact findContact (String phoneNumber) {
         for (Map.Entry<String, List<Contact>> item : groupBase.entrySet()) {
             for (Contact contact : item.getValue()) {
-                if (contact.getPhoneNumber() == phoneNumber) {
+                if (contact.getPhoneNumber().equals(phoneNumber)) {
                     return contact;
                 }
             }
